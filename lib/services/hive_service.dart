@@ -6,7 +6,6 @@ import 'package:lockin/models/recurrence.dart';
 import 'package:lockin/models/task.dart';
 import 'package:lockin/models/user_profile.dart';
 
-/// Service for managing Hive database operations
 class HiveService {
   static const String tasksBox = 'tasks';
   static const String actionLogsBox = 'action_logs';
@@ -15,11 +14,9 @@ class HiveService {
 
   static const String profileKey = 'user_profile';
 
-  /// Initialize Hive and register adapters
   static Future<void> initialize() async {
     await Hive.initFlutter();
 
-    // Register adapters
     Hive.registerAdapter(LifeCategoryAdapter());
     Hive.registerAdapter(RecurrenceTypeAdapter());
     Hive.registerAdapter(RecurrenceAdapter());
@@ -28,13 +25,11 @@ class HiveService {
     Hive.registerAdapter(DayEntryAdapter());
     Hive.registerAdapter(UserProfileAdapter());
 
-    // Open boxes
     await Hive.openBox<Task>(tasksBox);
     await Hive.openBox<ActionLog>(actionLogsBox);
     await Hive.openBox<DayEntry>(dayEntriesBox);
     await Hive.openBox<UserProfile>(profileBox);
 
-    // Initialize profile if it doesn't exist
     await _initializeProfile();
   }
 
@@ -49,7 +44,6 @@ class HiveService {
     }
   }
 
-  // Task operations
   static Box<Task> get tasks => Hive.box<Task>(tasksBox);
 
   static Future<void> saveTask(Task task) async {
@@ -78,7 +72,6 @@ class HiveService {
     }
   }
 
-  // Action log operations
   static Box<ActionLog> get actionLogs => Hive.box<ActionLog>(actionLogsBox);
 
   static Future<void> saveActionLog(ActionLog log) async {
@@ -107,7 +100,6 @@ class HiveService {
       ..sort((a, b) => b.completedAt.compareTo(a.completedAt));
   }
 
-  // Day entry operations
   static Box<DayEntry> get dayEntries => Hive.box<DayEntry>(dayEntriesBox);
 
   static DayEntry? getDayEntry(DateTime date) {
@@ -137,7 +129,6 @@ class HiveService {
     await dayEntries.put(key, entry);
   }
 
-  // Profile operations
   static Box<UserProfile> get userProfileBox =>
       Hive.box<UserProfile>(profileBox);
 
@@ -149,7 +140,6 @@ class HiveService {
     await userProfileBox.put(profileKey, profile);
   }
 
-  // Utility methods
   static String _dateKey(DateTime date) {
     final normalized = DayEntry.normalizeDate(date);
     return '${normalized.year}-${normalized.month.toString().padLeft(2, '0')}-${normalized.day.toString().padLeft(2, '0')}';
@@ -159,7 +149,6 @@ class HiveService {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
-  /// Clear all data (for testing or reset)
   static Future<void> clearAllData() async {
     await tasks.clear();
     await actionLogs.clear();
