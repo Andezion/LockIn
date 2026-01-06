@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 
 part 'life_category.g.dart';
 
-/// Represents the main life areas that the user wants to track
 @HiveType(typeId: 0)
 enum LifeCategory {
   @HiveField(0)
@@ -26,7 +25,6 @@ enum LifeCategory {
   @HiveField(6)
   career;
 
-  /// Display name for UI
   String get displayName {
     switch (this) {
       case LifeCategory.sport:
@@ -46,7 +44,6 @@ enum LifeCategory {
     }
   }
 
-  /// Keywords for automatic categorization
   List<String> get keywords {
     switch (this) {
       case LifeCategory.sport:
