@@ -123,6 +123,11 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
     _loadLogs();
   }
 
+  Future<void> deleteActionLog(String logId) async {
+    await HiveService.deleteActionLog(logId);
+    _loadLogs();
+  }
+
   void reload() {
     _loadLogs();
   }

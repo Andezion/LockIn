@@ -78,6 +78,10 @@ class HiveService {
     await actionLogs.put(log.id, log);
   }
 
+  static Future<void> deleteActionLog(String logId) async {
+    await actionLogs.delete(logId);
+  }
+
   static List<ActionLog> getActionLogsForDate(DateTime date) {
     final targetDate = DateTime(date.year, date.month, date.day);
     return actionLogs.values
@@ -124,6 +128,23 @@ class HiveService {
       );
     } else {
       entry.updateJournal(text);
+    }
+
+    await dayEntries.put(key, entry);
+  }
+
+  static Future<void> updateWellness(DateTime date, double score) async {
+    final key = _dateKey(date);
+    var entry = dayEntries.get(key);
+
+    if (entry == null) {
+      entry = DayEntry(
+        date: DayEntry.normalizeDate(date),
+        wellnessScore: score,
+        lastModified: DateTime.now(),
+      );
+    } else {
+      entry.updateWellness(score);
     }
 
     await dayEntries.put(key, entry);

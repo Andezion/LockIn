@@ -9,6 +9,7 @@ import 'package:lockin/screens/daily/journal_screen.dart';
 import 'package:lockin/screens/daily/widgets/task_item.dart';
 import 'package:lockin/screens/daily/add_task_screen.dart';
 import 'package:lockin/screens/daily/widgets/completed_actions_list.dart';
+import 'package:lockin/screens/daily/widgets/wellness_section.dart';
 
 final selectedDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 
@@ -41,6 +42,10 @@ class DailyView extends ConsumerWidget {
                     padding: const EdgeInsets.all(16),
                   ),
                 ),
+                const SizedBox(height: 24),
+                _buildSectionHeader(context, 'Wellness Check', Icons.favorite),
+                const SizedBox(height: 8),
+                WellnessSection(date: selectedDate),
                 const SizedBox(height: 24),
                 _buildSectionHeader(context, 'Planned Tasks', Icons.task_alt),
                 const SizedBox(height: 8),

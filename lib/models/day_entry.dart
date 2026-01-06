@@ -13,10 +13,14 @@ class DayEntry extends HiveObject {
   @HiveField(2)
   DateTime? lastModified;
 
+  @HiveField(3)
+  double? wellnessScore;
+
   DayEntry({
     required this.date,
     this.journalText,
     this.lastModified,
+    this.wellnessScore,
   });
 
   static DateTime normalizeDate(DateTime date) {
@@ -25,6 +29,11 @@ class DayEntry extends HiveObject {
 
   void updateJournal(String text) {
     journalText = text;
+    lastModified = DateTime.now();
+  }
+
+  void updateWellness(double score) {
+    wellnessScore = score;
     lastModified = DateTime.now();
   }
 }

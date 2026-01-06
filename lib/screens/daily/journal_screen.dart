@@ -107,6 +107,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                   label: const Text('Done'),
                 ),
               ),
+            const SizedBox(height: 50),
           ],
         ),
       ),

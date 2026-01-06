@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lockin/models/action_log.dart';
+import 'package:lockin/providers/action_logs_provider.dart';
 
-class CompletedActionsList extends StatelessWidget {
+class CompletedActionsList extends ConsumerWidget {
   final List<ActionLog> actions;
 
   const CompletedActionsList({super.key, required this.actions});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: actions
           .map((action) => Card(
@@ -30,28 +32,77 @@ class CompletedActionsList extends StatelessWidget {
                       ),
                     ],
                   ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        '+${action.xpEarned} XP',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '+${action.xpEarned} XP',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          if (action.durationMinutes != null)
+                            Text(
+                              '${action.durationMinutes} min',
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.grey[600]),
+                            ),
+                        ],
                       ),
-                      if (action.durationMinutes != null)
-                        Text(
-                          '${action.durationMinutes} min',
-                          style:
-                              TextStyle(fontSize: 12, color: Colors.grey[600]),
-                        ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, size: 20),
+                        color: Colors.red[400],
+                        onPressed: () =>
+                            _showDeleteDialog(context, ref, action),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
                     ],
                   ),
                 ),
               ))
           .toList(),
+    );
+  }
+
+  void _showDeleteDialog(
+      BuildContext context, WidgetRef ref, ActionLog action) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Completed Task'),
+        content: Text(
+            'Are you sure you want to delete "${action.taskTitle}" from history?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              await ref
+                  .read(actionLogsProvider.notifier)
+                  .deleteActionLog(action.id);
+              if (context.mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Task deleted from history')),
+                );
+              }
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
   }
 

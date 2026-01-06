@@ -20,6 +20,11 @@ class DayEntriesNotifier {
     ref.invalidate(dayEntryProvider(date));
   }
 
+  Future<void> updateWellness(DateTime date, double score) async {
+    await HiveService.updateWellness(date, score);
+    ref.invalidate(dayEntryProvider(date));
+  }
+
   DayEntry? getDayEntry(DateTime date) {
     return HiveService.getDayEntry(date);
   }
