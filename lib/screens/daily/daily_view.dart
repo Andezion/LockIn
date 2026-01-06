@@ -178,7 +178,7 @@ class DailyView extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: getScoreColor(entry.wellnessScore!),
+                              color: getScoreColor(entry!.wellnessScore!),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
