@@ -1,6 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lockin/models/action_log.dart';
 import 'package:lockin/models/day_entry.dart';
+import 'package:lockin/models/life_category.dart';
+import 'package:lockin/models/recurrence.dart';
 import 'package:lockin/models/task.dart';
 import 'package:lockin/models/user_profile.dart';
 
