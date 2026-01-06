@@ -8,7 +8,6 @@ import 'package:lockin/services/hive_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Hive database
   await HiveService.initialize();
 
   runApp(const ProviderScope(child: LockInApp()));
