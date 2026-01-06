@@ -7,13 +7,11 @@ import 'package:lockin/services/hive_service.dart';
 import 'package:lockin/services/xp_calculator.dart';
 import 'package:uuid/uuid.dart';
 
-/// Provider for all action logs
 final actionLogsProvider =
     StateNotifierProvider<ActionLogsNotifier, List<ActionLog>>((ref) {
   return ActionLogsNotifier(ref);
 });
 
-/// Provider for action logs on a specific date
 final actionLogsForDateProvider =
     Provider.family<List<ActionLog>, DateTime>((ref, date) {
   final allLogs = ref.watch(actionLogsProvider);
@@ -39,7 +37,6 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
     state = HiveService.getAllActionLogs();
   }
 
-  /// Complete a task and create an action log
   Future<void> completeTask({
     required Task task,
     int? durationMinutes,
@@ -47,14 +44,12 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
   }) async {
     final profile = ref.read(profileProvider);
 
-    // Calculate XP
     final xpEarned = XPCalculator.calculateTaskXp(
       difficulty: task.difficulty,
       durationMinutes: durationMinutes,
       currentStreak: profile.currentStreak,
     );
 
-    // Create action log
     final log = ActionLog(
       id: const Uuid().v4(),
       taskId: task.id,
@@ -69,11 +64,9 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
 
     await HiveService.saveActionLog(log);
 
-    // Update profile
     await ref.read(profileProvider.notifier).addXp(xpEarned);
     await ref.read(profileProvider.notifier).updateStreak(log.completedAt);
 
-    // Update category level
     final categoryPoints = XPCalculator.calculateCategoryProgress(
       difficulty: task.difficulty,
       durationMinutes: durationMinutes,
@@ -86,7 +79,6 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
     _loadLogs();
   }
 
-  /// Log a quick action (without predefined task)
   Future<void> logQuickAction({
     required String title,
     required LifeCategory category,
