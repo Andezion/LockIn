@@ -88,14 +88,12 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
   }) async {
     final profile = ref.read(profileProvider);
 
-    // Calculate XP
     final xpEarned = XPCalculator.calculateTaskXp(
       difficulty: difficulty,
       durationMinutes: durationMinutes,
       currentStreak: profile.currentStreak,
     );
 
-    // Create action log
     final log = ActionLog(
       id: const Uuid().v4(),
       taskId: 'quick_${const Uuid().v4()}',
@@ -110,11 +108,9 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
 
     await HiveService.saveActionLog(log);
 
-    // Update profile
     await ref.read(profileProvider.notifier).addXp(xpEarned);
     await ref.read(profileProvider.notifier).updateStreak(log.completedAt);
 
-    // Update category level
     final categoryPoints = XPCalculator.calculateCategoryProgress(
       difficulty: difficulty,
       durationMinutes: durationMinutes,
@@ -127,7 +123,6 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
     _loadLogs();
   }
 
-  /// Reload action logs from database
   void reload() {
     _loadLogs();
   }
