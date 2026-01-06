@@ -9,7 +9,7 @@ import 'package:lockin/screens/daily/journal_screen.dart';
 import 'package:lockin/screens/daily/widgets/task_item.dart';
 import 'package:lockin/screens/daily/add_task_screen.dart';
 import 'package:lockin/screens/daily/widgets/completed_actions_list.dart';
-import 'package:lockin/screens/daily/widgets/wellness_section.dart';
+import 'package:lockin/screens/daily/wellness_screen.dart';
 
 final selectedDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 
@@ -45,7 +45,7 @@ class DailyView extends ConsumerWidget {
                 const SizedBox(height: 24),
                 _buildSectionHeader(context, 'Wellness Check', Icons.favorite),
                 const SizedBox(height: 8),
-                WellnessSection(date: selectedDate),
+                _buildWellnessButton(context, ref, selectedDate),
                 const SizedBox(height: 24),
                 _buildSectionHeader(context, 'Planned Tasks', Icons.task_alt),
                 const SizedBox(height: 8),
@@ -103,6 +103,118 @@ class DailyView extends ConsumerWidget {
         message,
         style: TextStyle(color: Colors.grey[600]),
         textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildWellnessButton(
+      BuildContext context, WidgetRef ref, DateTime date) {
+    final entry = ref.watch(dayEntryProvider(date));
+    final hasWellness = entry?.wellnessScore != null;
+    final now = DateTime.now();
+    final timeSinceCheck = hasWellness && entry?.lastModified != null
+        ? now.difference(entry!.lastModified!)
+        : null;
+
+    String getTimeAgo() {
+      if (timeSinceCheck == null) return '';
+
+      final hours = timeSinceCheck.inHours;
+      final minutes = timeSinceCheck.inMinutes;
+
+      if (hours > 24) {
+        final days = timeSinceCheck.inDays;
+        return '$days ${days == 1 ? 'day' : 'days'} ago';
+      } else if (hours > 0) {
+        return '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
+      } else if (minutes > 0) {
+        return '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
+      } else {
+        return 'Just now';
+      }
+    }
+
+    Color getScoreColor(double score) {
+      if (score >= 4.0) return Colors.green;
+      if (score >= 3.0) return Colors.blue;
+      if (score >= 2.0) return Colors.orange;
+      return Colors.red;
+    }
+
+    return Card(
+      child: InkWell(
+        onTap: () => _navigateToWellness(context, date),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Icon(
+                hasWellness ? Icons.favorite : Icons.favorite_border,
+                color: hasWellness
+                    ? getScoreColor(entry!.wellnessScore!)
+                    : Theme.of(context).colorScheme.primary,
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      hasWellness
+                          ? 'View Wellness Check'
+                          : 'Take Wellness Check',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                    if (hasWellness) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: getScoreColor(entry.wellnessScore!),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              '${entry.wellnessScore!.toStringAsFixed(1)}/5',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            getTimeAgo(),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ] else
+                      Text(
+                        'Track your daily well-being',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -176,6 +288,15 @@ class DailyView extends ConsumerWidget {
       context,
       MaterialPageRoute(
         builder: (context) => JournalScreen(date: date),
+      ),
+    );
+  }
+
+  void _navigateToWellness(BuildContext context, DateTime date) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WellnessScreen(date: date),
       ),
     );
   }
