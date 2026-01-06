@@ -53,7 +53,6 @@ class _AddTaskDialogState extends ConsumerState<AddTaskDialog> {
               onChanged: _onTitleChanged,
             ),
             const SizedBox(height: 16),
-
             TextField(
               controller: _descriptionController,
               decoration: const InputDecoration(
@@ -63,8 +62,6 @@ class _AddTaskDialogState extends ConsumerState<AddTaskDialog> {
               maxLines: 2,
             ),
             const SizedBox(height: 16),
-
-            // Category selection
             Row(
               children: [
                 Expanded(
@@ -108,8 +105,6 @@ class _AddTaskDialogState extends ConsumerState<AddTaskDialog> {
               ],
             ),
             const SizedBox(height: 16),
-
-            // Difficulty
             Text('Difficulty', style: Theme.of(context).textTheme.labelLarge),
             Row(
               children: List.generate(5, (index) {
@@ -127,7 +122,6 @@ class _AddTaskDialogState extends ConsumerState<AddTaskDialog> {
               }),
             ),
             const SizedBox(height: 16),
-
             TextField(
               controller: _estimatedMinutesController,
               decoration: const InputDecoration(
@@ -137,8 +131,6 @@ class _AddTaskDialogState extends ConsumerState<AddTaskDialog> {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
-
-            // Recurrence
             DropdownButtonFormField<RecurrenceType>(
               value: _recurrenceType,
               decoration: const InputDecoration(
