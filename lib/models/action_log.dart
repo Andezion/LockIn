@@ -1,6 +1,8 @@
 import 'package:hive/hive.dart';
 import 'life_category.dart';
 
+part 'action_log.g.dart';
+
 /// Records when a task was completed
 @HiveType(typeId: 4)
 class ActionLog extends HiveObject {

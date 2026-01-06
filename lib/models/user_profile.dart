@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:hive/hive.dart';
 import 'life_category.dart';
 
+part 'user_profile.g.dart';
+
 /// User's progression and settings
 @HiveType(typeId: 6)
 class UserProfile extends HiveObject {

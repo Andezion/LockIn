@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+part 'recurrence.g.dart';
+
 /// Defines how often a task repeats
 @HiveType(typeId: 1)
 enum RecurrenceType {
