@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lockin/providers/action_logs_provider.dart';
+import 'package:lockin/providers/day_entries_provider.dart';
 import 'package:lockin/providers/tasks_provider.dart';
 import 'package:lockin/screens/daily/widgets/calendar_strip.dart';
-import 'package:lockin/screens/daily/widgets/journal_section.dart';
+import 'package:lockin/screens/daily/journal_screen.dart';
 import 'package:lockin/screens/daily/widgets/task_item.dart';
 import 'package:lockin/screens/daily/add_task_screen.dart';
 import 'package:lockin/screens/daily/widgets/completed_actions_list.dart';
@@ -61,7 +62,7 @@ class DailyView extends ConsumerWidget {
                 const SizedBox(height: 24),
                 _buildSectionHeader(context, 'Daily Journal', Icons.book),
                 const SizedBox(height: 8),
-                JournalSection(date: selectedDate),
+                _buildJournalButton(context, ref, selectedDate),
               ],
             ),
           ),
@@ -101,6 +102,59 @@ class DailyView extends ConsumerWidget {
     );
   }
 
+  Widget _buildJournalButton(
+      BuildContext context, WidgetRef ref, DateTime date) {
+    final entry = ref.watch(dayEntryProvider(date));
+    final hasEntry =
+        entry?.journalText != null && entry!.journalText!.isNotEmpty;
+
+    return Card(
+      child: InkWell(
+        onTap: () => _navigateToJournal(context, date),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Icon(
+                hasEntry ? Icons.book : Icons.book_outlined,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      hasEntry ? 'View Journal Entry' : 'Add Journal Entry',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                    if (hasEntry)
+                      Text(
+                        entry.journalText!.length > 50
+                            ? '${entry.journalText!.substring(0, 50)}...'
+                            : entry.journalText!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _navigateToAddTask(BuildContext context, WidgetRef ref) {
     Navigator.push(
       context,
@@ -108,6 +162,15 @@ class DailyView extends ConsumerWidget {
         builder: (context) => AddTaskScreen(
           initialDate: ref.read(selectedDateProvider),
         ),
+      ),
+    );
+  }
+
+  void _navigateToJournal(BuildContext context, DateTime date) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => JournalScreen(date: date),
       ),
     );
   }
