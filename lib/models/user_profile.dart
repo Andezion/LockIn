@@ -84,13 +84,11 @@ class UserProfile extends HiveObject {
     categoryLevels[category.name] = (current + points).clamp(0.0, 100.0);
   }
 
-  /// Update streak based on activity
   void updateStreak(DateTime activityDate) {
     final normalizedActivity =
         DateTime(activityDate.year, activityDate.month, activityDate.day);
 
     if (lastActiveDate == null) {
-      // First ever activity
       currentStreak = 1;
       lastActiveDate = normalizedActivity;
     } else {
@@ -99,26 +97,21 @@ class UserProfile extends HiveObject {
       final daysDiff = normalizedActivity.difference(lastNormalized).inDays;
 
       if (daysDiff == 0) {
-        // Same day, no change
         return;
       } else if (daysDiff == 1) {
-        // Consecutive day, increase streak
         currentStreak++;
         lastActiveDate = normalizedActivity;
       } else {
-        // Streak broken
         currentStreak = 1;
         lastActiveDate = normalizedActivity;
       }
     }
 
-    // Update longest streak
     if (currentStreak > longestStreak) {
       longestStreak = currentStreak;
     }
   }
 
-  /// Check if streak should be broken (called when missing planned tasks)
   void checkStreakBreak() {
     if (lastActiveDate == null) return;
 
@@ -129,7 +122,6 @@ class UserProfile extends HiveObject {
     final daysDiff = normalizedToday.difference(lastNormalized).inDays;
 
     if (daysDiff > 1) {
-      // More than one day passed, break streak
       currentStreak = 0;
     }
   }
