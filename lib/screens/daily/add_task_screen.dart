@@ -183,6 +183,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
               padding: const EdgeInsets.all(16),
             ),
           ),
+          const SizedBox(height: 100),
         ],
       ),
     );
