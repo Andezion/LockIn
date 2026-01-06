@@ -1,7 +1,5 @@
 import 'package:hive/hive.dart';
 
-part 'day_entry.g.dart';
-
 /// Represents a single day's journal entry and metadata
 @HiveType(typeId: 5)
 class DayEntry extends HiveObject {

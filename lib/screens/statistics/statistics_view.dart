@@ -34,7 +34,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              ref.invalidate(actionLogsProvider);
+              // Refresh data
               ref.invalidate(profileProvider);
             },
           ),

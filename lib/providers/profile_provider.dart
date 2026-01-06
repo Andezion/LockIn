@@ -1,11 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lockin/models/action_log.dart';
 import 'package:lockin/models/life_category.dart';
-import 'package:lockin/models/task.dart';
 import 'package:lockin/models/user_profile.dart';
 import 'package:lockin/services/hive_service.dart';
-import 'package:lockin/services/xp_calculator.dart';
-import 'package:uuid/uuid.dart';
 
 /// Provider for user profile
 final profileProvider =

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:lockin/models/task.dart';
 import 'package:lockin/providers/action_logs_provider.dart';
-import 'package:lockin/providers/day_entries_provider.dart';
 import 'package:lockin/providers/tasks_provider.dart';
 import 'package:lockin/screens/daily/widgets/calendar_strip.dart';
 import 'package:lockin/screens/daily/widgets/journal_section.dart';

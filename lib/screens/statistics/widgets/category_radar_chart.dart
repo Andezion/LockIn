@@ -33,8 +33,10 @@ class CategoryRadarChart extends StatelessWidget {
               },
               dataSets: [
                 RadarDataSet(
-                  fillColor:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  fillColor: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.3),
                   borderColor: Theme.of(context).colorScheme.primary,
                   borderWidth: 2,
                   dataEntries: LifeCategory.values.map((category) {

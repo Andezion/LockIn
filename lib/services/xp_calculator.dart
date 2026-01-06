@@ -1,5 +1,3 @@
-import 'package:lockin/models/life_category.dart';
-
 /// Service for calculating XP and level progression
 class XPCalculator {
   // Base XP values
@@ -86,7 +84,7 @@ class XPCalculator {
   /// Formula: level = floor(sqrt(totalXp / 100)) + 1
   static int calculateLevel(int totalXp) {
     if (totalXp < 100) return 1;
-    return (totalXp / 100).sqrt().floor() + 1;
+    return (sqrt(totalXp / 100)).floor() + 1;
   }
 
   /// Get XP required for a specific level

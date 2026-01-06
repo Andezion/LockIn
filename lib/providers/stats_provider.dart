@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lockin/models/action_log.dart';
 import 'package:lockin/models/life_category.dart';
 import 'package:lockin/providers/action_logs_provider.dart';
-import 'package:lockin/services/hive_service.dart';
 
 /// Statistics data for a specific date range
 class StatsData {

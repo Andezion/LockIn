@@ -1,7 +1,5 @@
 import 'package:hive/hive.dart';
 
-part 'life_category.g.dart';
-
 /// Represents the main life areas that the user wants to track
 @HiveType(typeId: 0)
 enum LifeCategory {

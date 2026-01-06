@@ -2,8 +2,6 @@ import 'package:hive/hive.dart';
 import 'life_category.dart';
 import 'recurrence.dart';
 
-part 'task.g.dart';
-
 /// Represents a planned or completed task/action
 @HiveType(typeId: 3)
 class Task extends HiveObject {

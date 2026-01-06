@@ -1,8 +1,6 @@
 import 'package:hive/hive.dart';
 import 'life_category.dart';
 
-part 'user_profile.g.dart';
-
 /// User's progression and settings
 @HiveType(typeId: 6)
 class UserProfile extends HiveObject {
@@ -56,7 +54,7 @@ class UserProfile extends HiveObject {
   /// etc.
   int calculateLevel() {
     if (totalXp < 100) return 1;
-    return (totalXp / 100).sqrt().floor() + 1;
+    return (sqrt(totalXp / 100)).floor() + 1;
   }
 
   /// XP needed for current level
@@ -99,8 +97,6 @@ class UserProfile extends HiveObject {
 
   /// Update streak based on activity
   void updateStreak(DateTime activityDate) {
-    final today = DateTime.now();
-    final normalizedToday = DateTime(today.year, today.month, today.day);
     final normalizedActivity =
         DateTime(activityDate.year, activityDate.month, activityDate.day);
 

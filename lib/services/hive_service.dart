@@ -138,15 +138,15 @@ class HiveService {
   }
 
   // Profile operations
-  static Box<UserProfile> get profileBox =>
-      Hive.box<UserProfile>(HiveService.profileBox);
+  static Box<UserProfile> get userProfileBox =>
+      Hive.box<UserProfile>(profileBox);
 
   static UserProfile getProfile() {
-    return profileBox.get(profileKey)!;
+    return userProfileBox.get(profileKey)!;
   }
 
   static Future<void> saveProfile(UserProfile profile) async {
-    await profileBox.put(profileKey, profile);
+    await userProfileBox.put(profileKey, profile);
   }
 
   // Utility methods
