@@ -6,7 +6,7 @@ import 'package:lockin/providers/tasks_provider.dart';
 import 'package:lockin/screens/daily/widgets/calendar_strip.dart';
 import 'package:lockin/screens/daily/widgets/journal_section.dart';
 import 'package:lockin/screens/daily/widgets/task_item.dart';
-import 'package:lockin/screens/daily/widgets/add_task_dialog.dart';
+import 'package:lockin/screens/daily/add_task_screen.dart';
 import 'package:lockin/screens/daily/widgets/completed_actions_list.dart';
 
 final selectedDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
@@ -32,6 +32,15 @@ class DailyView extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                FilledButton.icon(
+                  onPressed: () => _navigateToAddTask(context, ref),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add New Task'),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                  ),
+                ),
+                const SizedBox(height: 24),
                 _buildSectionHeader(context, 'Planned Tasks', Icons.task_alt),
                 const SizedBox(height: 8),
                 if (tasksForDate.isEmpty)
@@ -57,11 +66,6 @@ class DailyView extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddTaskDialog(context, ref),
-        icon: const Icon(Icons.add),
-        label: const Text('Add Task'),
       ),
     );
   }
@@ -97,11 +101,13 @@ class DailyView extends ConsumerWidget {
     );
   }
 
-  void _showAddTaskDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => AddTaskDialog(
-        initialDate: ref.read(selectedDateProvider),
+  void _navigateToAddTask(BuildContext context, WidgetRef ref) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddTaskScreen(
+          initialDate: ref.read(selectedDateProvider),
+        ),
       ),
     );
   }
