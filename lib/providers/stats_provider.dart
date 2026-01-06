@@ -1,0 +1,93 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lockin/models/action_log.dart';
+import 'package:lockin/models/life_category.dart';
+import 'package:lockin/providers/action_logs_provider.dart';
+import 'package:lockin/services/hive_service.dart';
+
+/// Statistics data for a specific date range
+class StatsData {
+  final int totalActions;
+  final int totalMinutes;
+  final int totalXp;
+  final Map<LifeCategory, int> actionsByCategory;
+  final Map<LifeCategory, int> minutesByCategory;
+  final List<ActionLog> recentActions;
+
+  StatsData({
+    required this.totalActions,
+    required this.totalMinutes,
+    required this.totalXp,
+    required this.actionsByCategory,
+    required this.minutesByCategory,
+    required this.recentActions,
+  });
+
+  factory StatsData.empty() {
+    return StatsData(
+      totalActions: 0,
+      totalMinutes: 0,
+      totalXp: 0,
+      actionsByCategory: {},
+      minutesByCategory: {},
+      recentActions: [],
+    );
+  }
+}
+
+/// Provider for statistics in a date range
+final statsProvider =
+    Provider.family<StatsData, ({DateTime start, DateTime end})>((ref, range) {
+  final allLogs = ref.watch(actionLogsProvider);
+
+  // Filter logs in range
+  final logsInRange = allLogs.where((log) {
+    return log.completedAt
+            .isAfter(range.start.subtract(const Duration(days: 1))) &&
+        log.completedAt.isBefore(range.end.add(const Duration(days: 1)));
+  }).toList();
+
+  if (logsInRange.isEmpty) {
+    return StatsData.empty();
+  }
+
+  // Calculate statistics
+  int totalActions = logsInRange.length;
+  int totalMinutes = logsInRange
+      .map((log) => log.durationMinutes ?? 0)
+      .reduce((a, b) => a + b);
+  int totalXp = logsInRange.map((log) => log.xpEarned).reduce((a, b) => a + b);
+
+  // Group by category
+  Map<LifeCategory, int> actionsByCategory = {};
+  Map<LifeCategory, int> minutesByCategory = {};
+
+  for (final log in logsInRange) {
+    actionsByCategory[log.category] =
+        (actionsByCategory[log.category] ?? 0) + 1;
+    minutesByCategory[log.category] =
+        (minutesByCategory[log.category] ?? 0) + (log.durationMinutes ?? 0);
+  }
+
+  return StatsData(
+    totalActions: totalActions,
+    totalMinutes: totalMinutes,
+    totalXp: totalXp,
+    actionsByCategory: actionsByCategory,
+    minutesByCategory: minutesByCategory,
+    recentActions: logsInRange.take(20).toList(),
+  );
+});
+
+/// Provider for weekly stats (last 7 days)
+final weeklyStatsProvider = Provider<StatsData>((ref) {
+  final now = DateTime.now();
+  final start = now.subtract(const Duration(days: 7));
+  return ref.watch(statsProvider((start: start, end: now)));
+});
+
+/// Provider for monthly stats (last 30 days)
+final monthlyStatsProvider = Provider<StatsData>((ref) {
+  final now = DateTime.now();
+  final start = now.subtract(const Duration(days: 30));
+  return ref.watch(statsProvider((start: start, end: now)));
+});
