@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:hive/hive.dart';
 import 'life_category.dart';
 

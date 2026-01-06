@@ -1,3 +1,5 @@
+import 'dart:math';
+
 /// Service for calculating XP and level progression
 class XPCalculator {
   // Base XP values
