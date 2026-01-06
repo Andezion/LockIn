@@ -34,7 +34,6 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Refresh data
               ref.invalidate(profileProvider);
             },
           ),
@@ -43,15 +42,10 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Period selector
           _buildPeriodSelector(),
           const SizedBox(height: 24),
-
-          // Overview cards
           StatsOverview(stats: stats),
           const SizedBox(height: 24),
-
-          // Category radar chart
           Text(
             'Life Balance',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -61,8 +55,6 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           const SizedBox(height: 16),
           CategoryRadarChart(categoryLevels: profile.categoryLevels),
           const SizedBox(height: 24),
-
-          // Category breakdown
           Text(
             'Activity Breakdown',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -72,8 +64,6 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           const SizedBox(height: 16),
           _buildCategoryBreakdown(stats),
           const SizedBox(height: 24),
-
-          // Recent activity timeline
           Text(
             'Recent Activity',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(

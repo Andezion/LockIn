@@ -38,8 +38,6 @@ class LevelProgressCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-
-            // Progress bar
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: LinearProgressIndicator(
@@ -52,8 +50,6 @@ class LevelProgressCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-
-            // XP numbers
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -70,7 +66,6 @@ class LevelProgressCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
             Text(
               'Keep completing tasks to level up!',

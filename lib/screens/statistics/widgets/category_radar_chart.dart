@@ -27,7 +27,6 @@ class CategoryRadarChart extends StatelessWidget {
               titlePositionPercentageOffset: 0.15,
               getTitle: (index, angle) {
                 final category = LifeCategory.values[index];
-                // Shorten labels for better display
                 final label = _getShortLabel(category);
                 return RadarChartTitle(text: label);
               },

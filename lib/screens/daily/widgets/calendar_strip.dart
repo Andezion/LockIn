@@ -11,7 +11,6 @@ class CalendarStrip extends ConsumerWidget {
     final selectedDate = ref.watch(selectedDateProvider);
     final today = DateTime.now();
 
-    // Generate 7 days centered around selected date
     final days = List.generate(7, (index) {
       return selectedDate.subtract(Duration(days: 3 - index));
     });
@@ -30,7 +29,6 @@ class CalendarStrip extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          // Previous week button
           IconButton(
             icon: const Icon(Icons.chevron_left),
             onPressed: () {
@@ -38,8 +36,6 @@ class CalendarStrip extends ConsumerWidget {
                   selectedDate.subtract(const Duration(days: 7));
             },
           ),
-
-          // Days
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -100,8 +96,6 @@ class CalendarStrip extends ConsumerWidget {
               },
             ),
           ),
-
-          // Next week button
           IconButton(
             icon: const Icon(Icons.chevron_right),
             onPressed: () {

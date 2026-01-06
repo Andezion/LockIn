@@ -20,7 +20,6 @@ class ProfileView extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // User avatar and level
           Center(
             child: Column(
               children: [
@@ -53,16 +52,10 @@ class ProfileView extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 32),
-
-          // Level progress
           LevelProgressCard(profile: profile),
           const SizedBox(height: 16),
-
-          // Streak info
           StreakCard(profile: profile),
           const SizedBox(height: 24),
-
-          // Category levels
           Text(
             'Category Progress',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -72,8 +65,6 @@ class ProfileView extends ConsumerWidget {
           const SizedBox(height: 16),
           CategoryLevelsList(categoryLevels: profile.categoryLevels),
           const SizedBox(height: 24),
-
-          // Settings/actions
           Text(
             'Settings',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -138,9 +129,7 @@ class ProfileView extends ConsumerWidget {
           ),
           FilledButton(
             onPressed: () async {
-              // Import HiveService to reset data
               Navigator.pop(context);
-              // Note: Implementation would need HiveService import
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(

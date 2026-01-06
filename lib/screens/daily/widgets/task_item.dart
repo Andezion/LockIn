@@ -16,7 +16,6 @@ class TaskItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Check if completed today
     final completedActions = ref.watch(actionLogsForDateProvider(date));
     final isCompleted = completedActions.any((log) => log.taskId == task.id);
 
@@ -45,7 +44,6 @@ class TaskItem extends ConsumerWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Difficulty indicator
             ...List.generate(
               task.difficulty,
               (index) => Icon(
