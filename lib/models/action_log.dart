@@ -3,17 +3,16 @@ import 'life_category.dart';
 
 part 'action_log.g.dart';
 
-/// Records when a task was completed
 @HiveType(typeId: 4)
 class ActionLog extends HiveObject {
   @HiveField(0)
   String id;
 
   @HiveField(1)
-  String taskId; // Reference to Task
+  String taskId;
 
   @HiveField(2)
-  String taskTitle; // Denormalized for quick access
+  String taskTitle;
 
   @HiveField(3)
   LifeCategory category;
@@ -25,13 +24,13 @@ class ActionLog extends HiveObject {
   DateTime completedAt;
 
   @HiveField(6)
-  int? durationMinutes; // Actual time spent
+  int? durationMinutes;
 
   @HiveField(7)
-  int xpEarned; // Calculated at completion time
+  int xpEarned;
 
   @HiveField(8)
-  String? notes; // Optional notes about the completion
+  String? notes;
 
   ActionLog({
     required this.id,
@@ -45,7 +44,6 @@ class ActionLog extends HiveObject {
     this.notes,
   });
 
-  /// Get the date portion (without time) for grouping
   DateTime get dateOnly {
     return DateTime(
       completedAt.year,
