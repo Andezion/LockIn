@@ -4,7 +4,6 @@ import 'recurrence.dart';
 
 part 'task.g.dart';
 
-/// Represents a planned or completed task/action
 @HiveType(typeId: 3)
 class Task extends HiveObject {
   @HiveField(0)
@@ -20,7 +19,7 @@ class Task extends HiveObject {
   LifeCategory category;
 
   @HiveField(4)
-  int difficulty; // 1-5, affects XP multiplier
+  int difficulty;
 
   @HiveField(5)
   int? estimatedMinutes;
@@ -32,7 +31,7 @@ class Task extends HiveObject {
   DateTime createdAt;
 
   @HiveField(8)
-  bool isActive; // Can be archived/deleted
+  bool isActive;
 
   Task({
     required this.id,
@@ -46,7 +45,6 @@ class Task extends HiveObject {
     this.isActive = true,
   });
 
-  /// Factory for creating one-time tasks
   factory Task.oneTime({
     required String id,
     required String title,
@@ -68,7 +66,6 @@ class Task extends HiveObject {
     );
   }
 
-  /// Factory for creating daily recurring tasks
   factory Task.daily({
     required String id,
     required String title,

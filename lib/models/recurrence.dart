@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 
 part 'recurrence.g.dart';
 
-/// Defines how often a task repeats
 @HiveType(typeId: 1)
 enum RecurrenceType {
   @HiveField(0)
@@ -18,17 +17,16 @@ enum RecurrenceType {
   custom;
 }
 
-/// Configuration for recurring tasks
 @HiveType(typeId: 2)
 class Recurrence extends HiveObject {
   @HiveField(0)
   RecurrenceType type;
 
   @HiveField(1)
-  int? intervalDays; // For custom recurrence
+  int? intervalDays;
 
   @HiveField(2)
-  List<int>? weekdays; // For weekly: 1=Monday, 7=Sunday
+  List<int>? weekdays;
 
   Recurrence({
     required this.type,
@@ -36,7 +34,6 @@ class Recurrence extends HiveObject {
     this.weekdays,
   });
 
-  /// Check if task should occur on a given date
   bool shouldOccurOn(DateTime date, DateTime taskCreatedDate) {
     switch (type) {
       case RecurrenceType.once:
