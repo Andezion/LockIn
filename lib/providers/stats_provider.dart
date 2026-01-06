@@ -3,7 +3,6 @@ import 'package:lockin/models/action_log.dart';
 import 'package:lockin/models/life_category.dart';
 import 'package:lockin/providers/action_logs_provider.dart';
 
-/// Statistics data for a specific date range
 class StatsData {
   final int totalActions;
   final int totalMinutes;
@@ -33,12 +32,10 @@ class StatsData {
   }
 }
 
-/// Provider for statistics in a date range
 final statsProvider =
     Provider.family<StatsData, ({DateTime start, DateTime end})>((ref, range) {
   final allLogs = ref.watch(actionLogsProvider);
 
-  // Filter logs in range
   final logsInRange = allLogs.where((log) {
     return log.completedAt
             .isAfter(range.start.subtract(const Duration(days: 1))) &&
@@ -49,14 +46,12 @@ final statsProvider =
     return StatsData.empty();
   }
 
-  // Calculate statistics
   int totalActions = logsInRange.length;
   int totalMinutes = logsInRange
       .map((log) => log.durationMinutes ?? 0)
       .reduce((a, b) => a + b);
   int totalXp = logsInRange.map((log) => log.xpEarned).reduce((a, b) => a + b);
 
-  // Group by category
   Map<LifeCategory, int> actionsByCategory = {};
   Map<LifeCategory, int> minutesByCategory = {};
 
@@ -77,14 +72,12 @@ final statsProvider =
   );
 });
 
-/// Provider for weekly stats (last 7 days)
 final weeklyStatsProvider = Provider<StatsData>((ref) {
   final now = DateTime.now();
   final start = now.subtract(const Duration(days: 7));
   return ref.watch(statsProvider((start: start, end: now)));
 });
 
-/// Provider for monthly stats (last 30 days)
 final monthlyStatsProvider = Provider<StatsData>((ref) {
   final now = DateTime.now();
   final start = now.subtract(const Duration(days: 30));
