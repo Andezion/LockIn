@@ -2,14 +2,13 @@ import 'package:hive/hive.dart';
 
 part 'day_entry.g.dart';
 
-/// Represents a single day's journal entry and metadata
 @HiveType(typeId: 5)
 class DayEntry extends HiveObject {
   @HiveField(0)
-  DateTime date; // Normalized to start of day
+  DateTime date;
 
   @HiveField(1)
-  String? journalText; // Free-form diary text
+  String? journalText;
 
   @HiveField(2)
   DateTime? lastModified;
@@ -20,12 +19,10 @@ class DayEntry extends HiveObject {
     this.lastModified,
   });
 
-  /// Normalize date to start of day
   static DateTime normalizeDate(DateTime date) {
     return DateTime(date.year, date.month, date.day);
   }
 
-  /// Create or update journal entry
   void updateJournal(String text) {
     journalText = text;
     lastModified = DateTime.now();
