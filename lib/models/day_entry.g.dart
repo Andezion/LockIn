@@ -14,19 +14,25 @@ class DayEntryAdapter extends TypeAdapter<DayEntry> {
       date: fields[0] as DateTime,
       journalText: fields[1] as String?,
       lastModified: fields[2] as DateTime?,
+      wellnessScore: fields[3] as double?,
+      penaltyXp: fields[4] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, DayEntry obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.date)
       ..writeByte(1)
       ..write(obj.journalText)
       ..writeByte(2)
-      ..write(obj.lastModified);
+      ..write(obj.lastModified)
+      ..writeByte(3)
+      ..write(obj.wellnessScore)
+      ..writeByte(4)
+      ..write(obj.penaltyXp);
   }
 
   @override
