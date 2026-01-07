@@ -8,8 +8,8 @@ class StatsData {
   final int totalActions;
   final int totalMinutes;
   final int totalXp;
-  final int penaltyXp; // Штрафные очки
-  final int netXp; // Чистые очки (totalXp - penaltyXp)
+  final int penaltyXp;
+  final int netXp;
   final Map<LifeCategory, int> actionsByCategory;
   final Map<LifeCategory, int> minutesByCategory;
   final List<ActionLog> recentActions;
@@ -59,7 +59,6 @@ final statsProvider =
       ? 0
       : logsInRange.map((log) => log.xpEarned).reduce((a, b) => a + b);
 
-  // Подсчитываем штрафы за этот период
   int penaltyXp = 0;
   final startDate =
       DateTime(range.start.year, range.start.month, range.start.day);
