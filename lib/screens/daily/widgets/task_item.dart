@@ -138,7 +138,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                             size: 16, color: Colors.grey[700]),
                         const SizedBox(width: 8),
                         Text(
-                          'Описание:',
+                          'Description:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.grey[700],
@@ -158,7 +158,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       Icon(Icons.category, size: 16, color: Colors.grey[700]),
                       const SizedBox(width: 8),
                       Text(
-                        'Категория:',
+                        'Category:',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[700],
@@ -178,7 +178,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                           size: 16, color: Colors.grey[700]),
                       const SizedBox(width: 8),
                       Text(
-                        'Сложность:',
+                        'Difficulty:',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[700],
@@ -203,7 +203,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                             size: 16, color: Colors.grey[700]),
                         const SizedBox(width: 8),
                         Text(
-                          'Примерное время:',
+                          'Estimated Time:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.grey[700],
