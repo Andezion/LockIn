@@ -16,11 +16,15 @@ class DayEntry extends HiveObject {
   @HiveField(3)
   double? wellnessScore;
 
+  @HiveField(4)
+  int? penaltyXp; // Штрафные очки за просроченные задачи
+
   DayEntry({
     required this.date,
     this.journalText,
     this.lastModified,
     this.wellnessScore,
+    this.penaltyXp,
   });
 
   static DateTime normalizeDate(DateTime date) {
@@ -34,6 +38,11 @@ class DayEntry extends HiveObject {
 
   void updateWellness(double score) {
     wellnessScore = score;
+    lastModified = DateTime.now();
+  }
+
+  void addPenalty(int xpPenalty) {
+    penaltyXp = (penaltyXp ?? 0) + xpPenalty;
     lastModified = DateTime.now();
   }
 }

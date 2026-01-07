@@ -150,6 +150,24 @@ class HiveService {
     await dayEntries.put(key, entry);
   }
 
+  static Future<void> addPenaltyForOverdueTask(
+      DateTime date, int penaltyXp) async {
+    final key = _dateKey(date);
+    var entry = dayEntries.get(key);
+
+    if (entry == null) {
+      entry = DayEntry(
+        date: DayEntry.normalizeDate(date),
+        penaltyXp: penaltyXp,
+        lastModified: DateTime.now(),
+      );
+    } else {
+      entry.addPenalty(penaltyXp);
+    }
+
+    await dayEntries.put(key, entry);
+  }
+
   static Box<UserProfile> get userProfileBox =>
       Hive.box<UserProfile>(profileBox);
 

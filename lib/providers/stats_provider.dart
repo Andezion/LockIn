@@ -2,11 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lockin/models/action_log.dart';
 import 'package:lockin/models/life_category.dart';
 import 'package:lockin/providers/action_logs_provider.dart';
+import 'package:lockin/services/hive_service.dart';
 
 class StatsData {
   final int totalActions;
   final int totalMinutes;
   final int totalXp;
+  final int penaltyXp; // Штрафные очки
+  final int netXp; // Чистые очки (totalXp - penaltyXp)
   final Map<LifeCategory, int> actionsByCategory;
   final Map<LifeCategory, int> minutesByCategory;
   final List<ActionLog> recentActions;
@@ -15,6 +18,8 @@ class StatsData {
     required this.totalActions,
     required this.totalMinutes,
     required this.totalXp,
+    required this.penaltyXp,
+    required this.netXp,
     required this.actionsByCategory,
     required this.minutesByCategory,
     required this.recentActions,
@@ -25,6 +30,8 @@ class StatsData {
       totalActions: 0,
       totalMinutes: 0,
       totalXp: 0,
+      penaltyXp: 0,
+      netXp: 0,
       actionsByCategory: {},
       minutesByCategory: {},
       recentActions: [],
@@ -42,15 +49,32 @@ final statsProvider =
         log.completedAt.isBefore(range.end.add(const Duration(days: 1)));
   }).toList();
 
-  if (logsInRange.isEmpty) {
-    return StatsData.empty();
+  int totalActions = logsInRange.length;
+  int totalMinutes = logsInRange.isEmpty
+      ? 0
+      : logsInRange
+          .map((log) => log.durationMinutes ?? 0)
+          .reduce((a, b) => a + b);
+  int totalXp = logsInRange.isEmpty
+      ? 0
+      : logsInRange.map((log) => log.xpEarned).reduce((a, b) => a + b);
+
+  // Подсчитываем штрафы за этот период
+  int penaltyXp = 0;
+  final startDate =
+      DateTime(range.start.year, range.start.month, range.start.day);
+  final endDate = DateTime(range.end.year, range.end.month, range.end.day);
+
+  for (var date = startDate;
+      date.isBefore(endDate.add(const Duration(days: 1)));
+      date = date.add(const Duration(days: 1))) {
+    final entry = HiveService.getDayEntry(date);
+    if (entry?.penaltyXp != null) {
+      penaltyXp += entry!.penaltyXp!;
+    }
   }
 
-  int totalActions = logsInRange.length;
-  int totalMinutes = logsInRange
-      .map((log) => log.durationMinutes ?? 0)
-      .reduce((a, b) => a + b);
-  int totalXp = logsInRange.map((log) => log.xpEarned).reduce((a, b) => a + b);
+  int netXp = totalXp - penaltyXp;
 
   Map<LifeCategory, int> actionsByCategory = {};
   Map<LifeCategory, int> minutesByCategory = {};
@@ -66,6 +90,8 @@ final statsProvider =
     totalActions: totalActions,
     totalMinutes: totalMinutes,
     totalXp: totalXp,
+    penaltyXp: penaltyXp,
+    netXp: netXp,
     actionsByCategory: actionsByCategory,
     minutesByCategory: minutesByCategory,
     recentActions: logsInRange.take(20).toList(),
