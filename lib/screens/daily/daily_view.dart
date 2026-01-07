@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:lockin/providers/action_logs_provider.dart';
 import 'package:lockin/providers/day_entries_provider.dart';
 import 'package:lockin/providers/tasks_provider.dart';
 import 'package:lockin/screens/daily/widgets/calendar_strip.dart';
 import 'package:lockin/screens/daily/journal_screen.dart';
 import 'package:lockin/screens/daily/widgets/task_item.dart';
 import 'package:lockin/screens/daily/add_task_screen.dart';
-import 'package:lockin/screens/daily/widgets/completed_actions_list.dart';
 import 'package:lockin/screens/daily/wellness_screen.dart';
 
 final selectedDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
@@ -20,7 +18,6 @@ class DailyView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDate = ref.watch(selectedDateProvider);
     final tasksForDate = ref.watch(tasksForDateProvider(selectedDate));
-    final completedActions = ref.watch(actionLogsForDateProvider(selectedDate));
 
     return Scaffold(
       appBar: AppBar(
@@ -56,14 +53,6 @@ class DailyView extends ConsumerWidget {
                         task: task,
                         date: selectedDate,
                       )),
-                const SizedBox(height: 24),
-                _buildSectionHeader(
-                    context, 'Completed Actions', Icons.check_circle),
-                const SizedBox(height: 8),
-                if (completedActions.isEmpty)
-                  _buildEmptyState('No actions completed yet')
-                else
-                  CompletedActionsList(actions: completedActions),
                 const SizedBox(height: 24),
                 _buildSectionHeader(context, 'Daily Journal', Icons.book),
                 const SizedBox(height: 8),

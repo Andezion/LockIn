@@ -75,6 +75,8 @@ class _TaskItemState extends ConsumerState<TaskItem> {
             ),
             title: Text(
               widget.task.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 decoration: isCompleted ? TextDecoration.lineThrough : null,
                 fontWeight: FontWeight.w600,
@@ -130,6 +132,25 @@ class _TaskItemState extends ConsumerState<TaskItem> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Icon(Icons.title, size: 16, color: Colors.grey[700]),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Full Title:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    widget.task.title,
+                    style: TextStyle(color: Colors.grey[800]),
+                  ),
+                  const SizedBox(height: 12),
                   if (widget.task.description != null &&
                       widget.task.description!.isNotEmpty) ...[
                     Row(

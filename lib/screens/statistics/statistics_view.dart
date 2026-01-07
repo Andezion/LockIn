@@ -5,7 +5,6 @@ import 'package:lockin/providers/profile_provider.dart';
 import 'package:lockin/providers/stats_provider.dart';
 import 'package:lockin/screens/statistics/widgets/category_radar_chart.dart';
 import 'package:lockin/screens/statistics/widgets/stats_overview.dart';
-import 'package:lockin/screens/statistics/widgets/activity_timeline.dart';
 
 enum StatsPeriod { week, month, all }
 
@@ -63,15 +62,6 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           ),
           const SizedBox(height: 16),
           _buildCategoryBreakdown(stats),
-          const SizedBox(height: 24),
-          Text(
-            'Recent Activity',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 16),
-          ActivityTimeline(actions: stats.recentActions),
         ],
       ),
     );
