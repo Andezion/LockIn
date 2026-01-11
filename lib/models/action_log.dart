@@ -32,6 +32,9 @@ class ActionLog extends HiveObject {
   @HiveField(8)
   String? notes;
 
+  @HiveField(9)
+  int completionCount;
+
   ActionLog({
     required this.id,
     required this.taskId,
@@ -42,6 +45,7 @@ class ActionLog extends HiveObject {
     this.durationMinutes,
     required this.xpEarned,
     this.notes,
+    this.completionCount = 1,
   });
 
   DateTime get dateOnly {
