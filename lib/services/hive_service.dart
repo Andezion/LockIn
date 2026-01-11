@@ -25,7 +25,6 @@ class HiveService {
     Hive.registerAdapter(DayEntryAdapter());
     Hive.registerAdapter(UserProfileAdapter());
 
-    // Delete old boxes if clearing data
     if (clearData) {
       await Hive.deleteBoxFromDisk(tasksBox);
       await Hive.deleteBoxFromDisk(actionLogsBox);
