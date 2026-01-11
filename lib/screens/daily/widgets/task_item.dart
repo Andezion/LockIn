@@ -24,19 +24,22 @@ class _TaskItemState extends ConsumerState<TaskItem> {
 
   @override
   Widget build(BuildContext context) {
-    final completedActions = ref.watch(actionLogsForDateProvider(widget.date));
-    final isCompleted =
-        completedActions.any((log) => log.taskId == widget.task.id);
+    final completionCount = ref.watch(taskCompletionCountProvider(
+        (taskId: widget.task.id, date: widget.date)));
+    final isFullyCompleted = completionCount >= widget.task.dailyGoal;
+    final hasAnyCompletion = completionCount > 0;
 
     final now = DateTime.now();
     final taskDate =
         DateTime(widget.date.year, widget.date.month, widget.date.day);
     final today = DateTime(now.year, now.month, now.day);
-    final isOverdue = !isCompleted && taskDate.isBefore(today);
+    final isOverdue = !isFullyCompleted && taskDate.isBefore(today);
 
     Color getBackgroundColor() {
-      if (isCompleted) {
+      if (isFullyCompleted) {
         return Colors.green.withOpacity(0.15);
+      } else if (hasAnyCompletion) {
+        return Colors.blue.withOpacity(0.15);
       } else if (isOverdue) {
         return Colors.red.withOpacity(0.15);
       } else {
@@ -45,8 +48,10 @@ class _TaskItemState extends ConsumerState<TaskItem> {
     }
 
     Color getBorderColor() {
-      if (isCompleted) {
+      if (isFullyCompleted) {
         return Colors.green;
+      } else if (hasAnyCompletion) {
+        return Colors.blue;
       } else if (isOverdue) {
         return Colors.red;
       } else {
@@ -68,20 +73,60 @@ class _TaskItemState extends ConsumerState<TaskItem> {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            leading: Checkbox(
-              value: isCompleted,
-              onChanged:
-                  isCompleted ? null : (_) => _showCompleteDialog(context),
-            ),
+            leading: widget.task.dailyGoal == 1
+                ? Checkbox(
+                    value: isFullyCompleted,
+                    onChanged: isFullyCompleted
+                        ? null
+                        : (_) => _showCompleteDialog(context),
+                  )
+                : Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isFullyCompleted
+                          ? Colors.green
+                          : hasAnyCompletion
+                              ? Colors.blue
+                              : Colors.grey[300],
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$completionCount/${widget.task.dailyGoal}',
+                        style: TextStyle(
+                          color: hasAnyCompletion
+                              ? Colors.white
+                              : Colors.grey[700],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
             title: Text(
               widget.task.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                decoration: isCompleted ? TextDecoration.lineThrough : null,
+                decoration:
+                    isFullyCompleted ? TextDecoration.lineThrough : null,
                 fontWeight: FontWeight.w600,
               ),
             ),
+            subtitle: widget.task.dailyGoal > 1
+                ? Text(
+                    completionCount >= widget.task.dailyGoal
+                        ? 'Completed ${completionCount}x today!'
+                        : 'Goal: ${widget.task.dailyGoal}x per day',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isFullyCompleted
+                          ? Colors.green[700]
+                          : Colors.grey[600],
+                    ),
+                  )
+                : null,
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -216,28 +261,50 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                       ),
                     ],
                   ),
-                  if (widget.task.estimatedMinutes != null) ...[
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(Icons.access_time,
-                            size: 16, color: Colors.grey[700]),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Estimated Time:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[700],
-                          ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.add_task, size: 16, color: Colors.grey[700]),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Daily Goal:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[700],
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '~${widget.task.estimatedMinutes} мин',
-                          style: TextStyle(color: Colors.grey[800]),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.task.dailyGoal == 1
+                            ? 'Complete once'
+                            : 'Complete ${widget.task.dailyGoal}x',
+                        style: TextStyle(color: Colors.grey[800]),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.emoji_events,
+                          size: 16, color: Colors.grey[700]),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Life Balance Points:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[700],
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '+${widget.task.categoryPoints}',
+                        style: TextStyle(
+                          color: Colors.green[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
