@@ -14,7 +14,7 @@ class HiveService {
 
   static const String profileKey = 'user_profile';
 
-  static Future<void> initialize() async {
+  static Future<void> initialize({bool clearData = false}) async {
     await Hive.initFlutter();
 
     Hive.registerAdapter(LifeCategoryAdapter());
@@ -24,6 +24,14 @@ class HiveService {
     Hive.registerAdapter(ActionLogAdapter());
     Hive.registerAdapter(DayEntryAdapter());
     Hive.registerAdapter(UserProfileAdapter());
+
+    // Delete old boxes if clearing data
+    if (clearData) {
+      await Hive.deleteBoxFromDisk(tasksBox);
+      await Hive.deleteBoxFromDisk(actionLogsBox);
+      await Hive.deleteBoxFromDisk(dayEntriesBox);
+      await Hive.deleteBoxFromDisk(profileBox);
+    }
 
     await Hive.openBox<Task>(tasksBox);
     await Hive.openBox<ActionLog>(actionLogsBox);
