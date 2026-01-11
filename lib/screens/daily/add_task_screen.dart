@@ -22,6 +22,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
 
   LifeCategory? _selectedCategory;
   int _difficulty = 2;
+  int _dailyGoal = 1;
   RecurrenceType _recurrenceType = RecurrenceType.once;
   bool _autoDetectCategory = true;
 
@@ -152,6 +153,67 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
           ),
           const SizedBox(height: 24),
           Text(
+            'Daily Goal',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'How many times per day?',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: _dailyGoal > 1
+                            ? () => setState(() => _dailyGoal--)
+                            : null,
+                        icon: const Icon(Icons.remove_circle_outline),
+                      ),
+                      Expanded(
+                        child: Text(
+                          _dailyGoal == 1
+                              ? '1 time (complete once)'
+                              : '$_dailyGoal times',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: _dailyGoal < 10
+                            ? () => setState(() => _dailyGoal++)
+                            : null,
+                        icon: const Icon(Icons.add_circle_outline),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _dailyGoal == 1
+                        ? 'Task needs to be completed once'
+                        : 'Task needs to be completed $_dailyGoal times per day',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
             'Recurrence',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -222,6 +284,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
       estimatedMinutes: null,
       recurrence: Recurrence(type: _recurrenceType),
       createdAt: widget.initialDate,
+      dailyGoal: _dailyGoal,
     );
 
     await ref.read(tasksProvider.notifier).addTask(task);
