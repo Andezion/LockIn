@@ -13,20 +13,10 @@ class StatsOverview extends StatelessWidget {
         Expanded(
           child: _buildStatCard(
             context,
-            'Actions',
+            'Tasks',
             stats.totalActions.toString(),
             Icons.check_circle,
             Colors.blue,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildStatCard(
-            context,
-            'Time',
-            '${(stats.totalMinutes / 60).toStringAsFixed(1)}h',
-            Icons.schedule,
-            Colors.green,
           ),
         ),
         const SizedBox(width: 12),
@@ -55,14 +45,18 @@ class StatsOverview extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Icon(icon, size: 32, color: color),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            Icon(icon, size: 40, color: color),
+            const SizedBox(height: 12),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
             ),
+            const SizedBox(height: 4),
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall,
