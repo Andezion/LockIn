@@ -22,6 +22,13 @@ final actionLogsForDateProvider =
     ..sort((a, b) => b.completedAt.compareTo(a.completedAt));
 });
 
+final taskCompletionCountProvider =
+    Provider.family<int, ({String taskId, DateTime date})>((ref, params) {
+  final logsForDate = ref.watch(actionLogsForDateProvider(params.date));
+  final taskLogs = logsForDate.where((log) => log.taskId == params.taskId);
+  return taskLogs.fold(0, (sum, log) => sum + log.completionCount);
+});
+
 bool _isSameDay(DateTime a, DateTime b) {
   return a.year == b.year && a.month == b.month && a.day == b.day;
 }
@@ -60,6 +67,7 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
       durationMinutes: durationMinutes,
       xpEarned: xpEarned,
       notes: notes,
+      completionCount: 1,
     );
 
     await HiveService.saveActionLog(log);
@@ -67,13 +75,9 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
     await ref.read(profileProvider.notifier).addXp(xpEarned);
     await ref.read(profileProvider.notifier).updateStreak(log.completedAt);
 
-    final categoryPoints = XPCalculator.calculateCategoryProgress(
-      difficulty: task.difficulty,
-      durationMinutes: durationMinutes,
-    );
     await ref.read(profileProvider.notifier).updateCategoryLevel(
           task.category,
-          categoryPoints,
+          task.categoryPoints.toDouble(),
         );
 
     _loadLogs();
