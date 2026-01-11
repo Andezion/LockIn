@@ -43,7 +43,7 @@ class UserProfile extends HiveObject {
 
   static Map<String, double> _initializeCategoryLevels() {
     return {
-      for (var category in LifeCategory.values) category.name: 0.0,
+      for (var category in LifeCategory.values) category.name: 100.0,
     };
   }
 
