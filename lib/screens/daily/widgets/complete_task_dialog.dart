@@ -13,20 +13,10 @@ class CompleteTaskDialog extends ConsumerStatefulWidget {
 }
 
 class _CompleteTaskDialogState extends ConsumerState<CompleteTaskDialog> {
-  final _durationController = TextEditingController();
   final _notesController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.task.estimatedMinutes != null) {
-      _durationController.text = widget.task.estimatedMinutes.toString();
-    }
-  }
-
-  @override
   void dispose() {
-    _durationController.dispose();
     _notesController.dispose();
     super.dispose();
   }
@@ -43,15 +33,6 @@ class _CompleteTaskDialogState extends ConsumerState<CompleteTaskDialog> {
             Text(
               widget.task.title,
               style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _durationController,
-              decoration: const InputDecoration(
-                labelText: 'Duration (minutes)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
             TextField(
@@ -79,15 +60,11 @@ class _CompleteTaskDialogState extends ConsumerState<CompleteTaskDialog> {
   }
 
   void _complete() async {
-    final durationText = _durationController.text.trim();
     final notes = _notesController.text.trim();
-
-    final duration =
-        durationText.isNotEmpty ? int.tryParse(durationText) : null;
 
     await ref.read(actionLogsProvider.notifier).completeTask(
           task: widget.task,
-          durationMinutes: duration,
+          durationMinutes: null,
           notes: notes.isNotEmpty ? notes : null,
         );
 
