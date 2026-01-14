@@ -48,7 +48,7 @@ class DailyPenaltyIndicator extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Штраф за невыполненные задачи',
+                  'Penalty for Incomplete Tasks',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.orange[900],
@@ -56,7 +56,7 @@ class DailyPenaltyIndicator extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Вы потеряли XP за невыполнение запланированных задач',
+                  'You lost XP for not completing your planned tasks',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.orange[800],
                       ),
