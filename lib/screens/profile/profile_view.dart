@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lockin/providers/profile_provider.dart';
+import 'package:lockin/providers/penalty_provider.dart';
 import 'package:lockin/screens/profile/widgets/level_progress_card.dart';
 import 'package:lockin/screens/profile/widgets/streak_card.dart';
 import 'package:lockin/screens/profile/widgets/category_levels_list.dart';
+import 'package:lockin/screens/profile/widgets/penalty_info_card.dart';
 
 class ProfileView extends ConsumerWidget {
   const ProfileView({super.key});
@@ -55,6 +57,8 @@ class ProfileView extends ConsumerWidget {
           LevelProgressCard(profile: profile),
           const SizedBox(height: 16),
           StreakCard(profile: profile),
+          const SizedBox(height: 16),
+          const PenaltyInfoCard(),
           const SizedBox(height: 24),
           Text(
             'Category Progress',
@@ -82,6 +86,12 @@ class ProfileView extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
+          leading: const Icon(Icons.sync, color: Colors.blue),
+          title: const Text('Check Penalties'),
+          subtitle: const Text('Recalculate penalties for incomplete tasks'),
+          onTap: () => _checkPenalties(context, ref),
+        ),
+        ListTile(
           leading: const Icon(Icons.info_outline),
           title: const Text('About'),
           subtitle: const Text('Version 1.0.0'),
@@ -96,6 +106,80 @@ class ProfileView extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  void _checkPenalties(BuildContext context, WidgetRef ref) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    try {
+      final result = await ref.read(penaltyProvider).checkAndApplyPenalties();
+
+      if (context.mounted) {
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  result.hasPenalties
+                      ? Icons.warning_amber_rounded
+                      : Icons.check_circle,
+                  color: result.hasPenalties ? Colors.orange : Colors.green,
+                ),
+                const SizedBox(width: 8),
+                const Text('Check Completed'),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (result.hasPenalties) ...[
+                  Text('Penalties Detected:'),
+                  const SizedBox(height: 8),
+                  Text(
+                    '-${result.totalPenalty} XP',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    result.penaltiesByDate.length == 1
+                        ? 'For 1 missed day'
+                        : 'For ${result.penaltiesByDate.length} missed days',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ] else ...[
+                  Text('Great! No incomplete tasks! 🎉'),
+                ],
+              ],
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 
   void _showAboutDialog(BuildContext context) {
