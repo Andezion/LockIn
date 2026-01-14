@@ -12,7 +12,6 @@ class DailyPenaltyIndicator extends ConsumerWidget {
     final dayEntry = ref.watch(dayEntryProvider(date));
     final penalty = dayEntry?.penaltyXp;
 
-    // Не показываем виджет если нет штрафов
     if (penalty == null || penalty == 0) {
       return const SizedBox.shrink();
     }
