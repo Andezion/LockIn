@@ -32,14 +32,14 @@ class PenaltyInfoCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Штрафы за месяц',
+                        'Penalties for the Month',
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                       ),
                       Text(
-                        'За невыполненные задачи',
+                        'For incomplete tasks',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.grey[600],
                             ),
@@ -55,7 +55,7 @@ class PenaltyInfoCard extends StatelessWidget {
                 Expanded(
                   child: _buildStatItem(
                     context,
-                    'Всего потеряно',
+                    'Total Lost',
                     '-$totalPenalty XP',
                     totalPenalty > 0 ? Colors.red : Colors.green,
                   ),
@@ -76,8 +76,8 @@ class PenaltyInfoCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Каждая невыполненная задача приносит штраф:\n'
-                      'Штраф = (Сложность задачи + 1) × Количество пропусков',
+                      'Each incomplete task incurs a penalty:\n'
+                      'Penalty = (Task Difficulty + 1) × Number of Misses',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.blue[900],
@@ -101,7 +101,7 @@ class PenaltyInfoCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Отлично! В этом месяце нет штрафов!',
+                        'Great! No penalties this month!',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.green[900],
