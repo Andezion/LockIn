@@ -8,6 +8,7 @@ import 'package:lockin/screens/daily/journal_screen.dart';
 import 'package:lockin/screens/daily/widgets/task_item.dart';
 import 'package:lockin/screens/daily/add_task_screen.dart';
 import 'package:lockin/screens/daily/wellness_screen.dart';
+import 'package:lockin/screens/daily/widgets/daily_penalty_indicator.dart';
 
 final selectedDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 
@@ -31,6 +32,7 @@ class DailyView extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                DailyPenaltyIndicator(date: selectedDate),
                 FilledButton.icon(
                   onPressed: () => _navigateToAddTask(context, ref),
                   icon: const Icon(Icons.add),
