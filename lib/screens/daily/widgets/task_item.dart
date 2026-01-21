@@ -73,37 +73,50 @@ class _TaskItemState extends ConsumerState<TaskItem> {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            leading: widget.task.dailyGoal == 1
-                ? Checkbox(
-                    value: isFullyCompleted,
-                    onChanged: isFullyCompleted
-                        ? null
-                        : (_) => _showCompleteDialog(context),
-                  )
-                : Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isFullyCompleted
-                          ? Colors.green
-                          : hasAnyCompletion
-                              ? Colors.blue
-                              : Colors.grey[300],
-                    ),
-                    child: Center(
-                      child: Text(
-                        '$completionCount/${widget.task.dailyGoal}',
-                        style: TextStyle(
-                          color: hasAnyCompletion
-                              ? Colors.white
-                              : Colors.grey[700],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
+            leading: SizedBox(
+              width: 48,
+              height: 48,
+              child: widget.task.dailyGoal == 1
+                  ? Center(
+                      child: SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: Checkbox(
+                          value: isFullyCompleted,
+                          onChanged: isFullyCompleted
+                              ? null
+                              : (_) => _showCompleteDialog(context),
+                        ),
+                      ),
+                    )
+                    : InkWell(
+                      onTap: () => _showCompleteDialog(context),
+                      borderRadius: BorderRadius.circular(24),
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isFullyCompleted
+                              ? Colors.green
+                              : hasAnyCompletion
+                                  ? Colors.blue
+                                  : Colors.grey[300],
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$completionCount/${widget.task.dailyGoal}',
+                            style: TextStyle(
+                              color: hasAnyCompletion
+                                  ? Colors.white
+                                  : Colors.grey[700],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
             title: Text(
               widget.task.title,
               maxLines: 1,

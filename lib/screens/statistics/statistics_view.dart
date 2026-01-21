@@ -130,7 +130,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               ),
             ),
             title: Text(category.displayName),
-            subtitle: Text('${hours}h total'),
+            subtitle: null,
             trailing: SizedBox(
               width: 100,
               child: LinearProgressIndicator(

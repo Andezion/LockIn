@@ -75,9 +75,13 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
     await ref.read(profileProvider.notifier).addXp(xpEarned);
     await ref.read(profileProvider.notifier).updateStreak(log.completedAt);
 
+    final categoryPoints = XPCalculator.calculateCategoryProgress(
+      difficulty: task.difficulty,
+      durationMinutes: durationMinutes,
+    );
     await ref.read(profileProvider.notifier).updateCategoryLevel(
           task.category,
-          task.categoryPoints.toDouble(),
+          categoryPoints,
         );
 
     _loadLogs();
