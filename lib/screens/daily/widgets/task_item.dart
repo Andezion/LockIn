@@ -37,13 +37,13 @@ class _TaskItemState extends ConsumerState<TaskItem> {
 
     Color getBackgroundColor() {
       if (isFullyCompleted) {
-        return Colors.green.withOpacity(0.15);
+        return Colors.green.withValues(alpha: 0.15);
       } else if (hasAnyCompletion) {
-        return Colors.blue.withOpacity(0.15);
+        return Colors.blue.withValues(alpha: 0.15);
       } else if (isOverdue) {
-        return Colors.red.withOpacity(0.15);
+        return Colors.red.withValues(alpha: 0.15);
       } else {
-        return Colors.grey.withOpacity(0.1);
+        return Colors.grey.withValues(alpha: 0.1);
       }
     }
 
@@ -59,6 +59,50 @@ class _TaskItemState extends ConsumerState<TaskItem> {
       }
     }
 
+    final Widget leadingWidget = SizedBox(
+      width: 48,
+      height: 48,
+      child: widget.task.dailyGoal == 1
+          ? Center(
+              child: SizedBox(
+                width: 32,
+                height: 32,
+                child: Checkbox(
+                  value: isFullyCompleted,
+                  onChanged: isFullyCompleted
+                      ? null
+                      : (_) => _showCompleteDialog(context),
+                ),
+              ),
+            )
+          : InkWell(
+              onTap: () => _showCompleteDialog(context),
+              borderRadius: BorderRadius.circular(24),
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isFullyCompleted
+                      ? Colors.green
+                      : hasAnyCompletion
+                          ? Colors.blue
+                          : Colors.grey[300],
+                ),
+                child: Center(
+                  child: Text(
+                    '$completionCount/${widget.task.dailyGoal}',
+                    style: TextStyle(
+                      color: hasAnyCompletion ? Colors.white : Colors.grey[700],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+    );
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       color: getBackgroundColor(),
@@ -73,50 +117,7 @@ class _TaskItemState extends ConsumerState<TaskItem> {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            leading: SizedBox(
-              width: 48,
-              height: 48,
-              child: widget.task.dailyGoal == 1
-                  ? Center(
-                      child: SizedBox(
-                        width: 32,
-                        height: 32,
-                        child: Checkbox(
-                          value: isFullyCompleted,
-                          onChanged: isFullyCompleted
-                              ? null
-                              : (_) => _showCompleteDialog(context),
-                        ),
-                      ),
-                    )
-                    : InkWell(
-                      onTap: () => _showCompleteDialog(context),
-                      borderRadius: BorderRadius.circular(24),
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isFullyCompleted
-                              ? Colors.green
-                              : hasAnyCompletion
-                                  ? Colors.blue
-                                  : Colors.grey[300],
-                        ),
-                        child: Center(
-                          child: Text(
-                            '$completionCount/${widget.task.dailyGoal}',
-                            style: TextStyle(
-                              color: hasAnyCompletion
-                                  ? Colors.white
-                                  : Colors.grey[700],
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+            leading: leadingWidget,
             title: Text(
               widget.task.title,
               maxLines: 1,
@@ -179,10 +180,10 @@ class _TaskItemState extends ConsumerState<TaskItem> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 border: Border(
                   top: BorderSide(
-                    color: getBorderColor().withOpacity(0.3),
+                    color: getBorderColor().withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),

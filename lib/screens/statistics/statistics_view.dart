@@ -113,8 +113,6 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           (c) => c.name == entry.key.name,
         );
         final count = entry.value;
-        final minutes = stats.minutesByCategory[entry.key] ?? 0;
-        final hours = (minutes / 60).toStringAsFixed(1);
 
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
