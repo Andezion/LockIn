@@ -56,7 +56,7 @@ class PenaltyInfoCard extends StatelessWidget {
                   child: _buildStatItem(
                     context,
                     'Total Lost',
-                    '-$totalPenalty XP',
+                    totalPenalty > 0 ? '-$totalPenalty XP' : '0 XP',
                     totalPenalty > 0 ? Colors.red : Colors.green,
                   ),
                 ),
