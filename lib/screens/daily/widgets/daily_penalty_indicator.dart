@@ -72,7 +72,7 @@ class DailyPenaltyIndicator extends ConsumerWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              '-$penalty XP',
+              '$penalty XP',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
