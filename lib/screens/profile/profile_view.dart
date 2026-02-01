@@ -159,7 +159,7 @@ class ProfileView extends ConsumerWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ] else ...[
-                  Text('Great! No incomplete tasks! 🎉'),
+                  Text('Great! No incomplete tasks!'),
                 ],
               ],
             ),
