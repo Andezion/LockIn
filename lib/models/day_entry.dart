@@ -17,7 +17,7 @@ class DayEntry extends HiveObject {
   double? wellnessScore;
 
   @HiveField(4)
-  int? penaltyXp; // Штрафные очки за просроченные задачи
+  int? penaltyXp;
 
   DayEntry({
     required this.date,
