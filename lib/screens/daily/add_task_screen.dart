@@ -292,7 +292,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
     if (mounted) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Task added successfully! 🎉')),
+        const SnackBar(content: Text('Task added successfully!')),
       );
     }
   }
