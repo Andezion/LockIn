@@ -8,26 +8,54 @@ class StatsOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _buildStatCard(
-            context,
-            'Tasks',
-            stats.totalActions.toString(),
-            Icons.check_circle,
-            Colors.blue,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                context,
+                'Tasks',
+                stats.totalActions.toString(),
+                Icons.check_circle,
+                Colors.blue,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                context,
+                'XP Earned',
+                stats.totalXp.toString(),
+                Icons.star,
+                Colors.amber,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildStatCard(
-            context,
-            'XP Earned',
-            stats.totalXp.toString(),
-            Icons.star,
-            Colors.amber,
-          ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                context,
+                'Penalty',
+                stats.penaltyXp > 0 ? '-${stats.penaltyXp}' : '0',
+                Icons.warning_amber_rounded,
+                stats.penaltyXp > 0 ? Colors.red : Colors.green,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                context,
+                'Net XP',
+                stats.netXp.toString(),
+                Icons.trending_up,
+                stats.netXp >= 0 ? Colors.green : Colors.red,
+              ),
+            ),
+          ],
         ),
       ],
     );
