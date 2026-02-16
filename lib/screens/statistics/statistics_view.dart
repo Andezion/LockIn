@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lockin/models/life_category.dart';
@@ -19,6 +21,34 @@ class StatisticsView extends ConsumerStatefulWidget {
 
 class _StatisticsViewState extends ConsumerState<StatisticsView> {
   StatsPeriod _selectedPeriod = StatsPeriod.week;
+  Timer? _autoSwitchTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoSwitch();
+  }
+
+  @override
+  void dispose() {
+    _autoSwitchTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startAutoSwitch() {
+    _autoSwitchTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      setState(() {
+        _selectedPeriod = _selectedPeriod == StatsPeriod.week
+            ? StatsPeriod.month
+            : StatsPeriod.week;
+      });
+    });
+  }
+
+  void _resetAutoSwitch() {
+    _autoSwitchTimer?.cancel();
+    _startAutoSwitch();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +153,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         setState(() {
           _selectedPeriod = newSelection.first;
         });
+        _resetAutoSwitch();
       },
     );
   }
