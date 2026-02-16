@@ -126,7 +126,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Journal saved ✓')),
+        const SnackBar(content: Text('Journal saved!')),
       );
     }
   }
