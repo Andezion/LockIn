@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lockin/models/life_category.dart';
+import 'package:lockin/providers/action_logs_provider.dart';
 import 'package:lockin/providers/profile_provider.dart';
 import 'package:lockin/providers/stats_provider.dart';
+import 'package:lockin/services/hive_service.dart';
 import 'package:lockin/screens/statistics/widgets/category_radar_chart.dart';
 import 'package:lockin/screens/statistics/widgets/stats_overview.dart';
 
@@ -36,6 +38,11 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               ref.invalidate(profileProvider);
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            tooltip: 'Clear statistics',
+            onPressed: () => _showClearConfirmation(context),
+          ),
         ],
       ),
       body: ListView(
@@ -62,6 +69,36 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           ),
           const SizedBox(height: 16),
           _buildCategoryBreakdown(stats),
+        ],
+      ),
+    );
+  }
+
+  void _showClearConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Statistics'),
+        content: const Text(
+          'This will delete all action logs, day entries, and reset your profile (XP, levels, streaks). Tasks will be kept.\n\nAre you sure?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () async {
+              await HiveService.actionLogs.clear();
+              await HiveService.dayEntries.clear();
+              await HiveService.clearAllData();
+              ref.read(actionLogsProvider.notifier).reload();
+              ref.read(profileProvider.notifier).reload();
+              if (context.mounted) Navigator.pop(context);
+            },
+            child: const Text('Clear'),
+          ),
         ],
       ),
     );
