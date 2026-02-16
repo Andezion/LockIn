@@ -102,7 +102,7 @@ class _MainNavigatorState extends ConsumerState<MainNavigator> {
             ),
             const SizedBox(height: 12),
             Text(
-              '-${result.totalPenalty} XP',
+              '${result.totalPenalty} XP',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
