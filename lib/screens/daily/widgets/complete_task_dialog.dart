@@ -71,7 +71,7 @@ class _CompleteTaskDialogState extends ConsumerState<CompleteTaskDialog> {
     if (mounted) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${widget.task.title} completed! 🎉')),
+        SnackBar(content: Text('${widget.task.title} completed!')),
       );
     }
   }
