@@ -9,7 +9,7 @@ import 'package:lockin/providers/penalty_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await HiveService.initialize(clearData: true);
+  await HiveService.initialize(clearData: false);
 
   runApp(const ProviderScope(child: LockInApp()));
 }
