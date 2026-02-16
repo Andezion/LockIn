@@ -132,6 +132,20 @@ class ActionLogsNotifier extends StateNotifier<List<ActionLog>> {
   }
 
   Future<void> deleteActionLog(String logId) async {
+    final log = state.where((l) => l.id == logId).firstOrNull;
+    if (log != null) {
+      await ref.read(profileProvider.notifier).removeXp(log.xpEarned);
+
+      final categoryPoints = XPCalculator.calculateCategoryProgress(
+        difficulty: log.difficulty,
+        durationMinutes: log.durationMinutes,
+      );
+      await ref.read(profileProvider.notifier).updateCategoryLevel(
+            log.category,
+            -categoryPoints,
+          );
+    }
+
     await HiveService.deleteActionLog(logId);
     _loadLogs();
   }
