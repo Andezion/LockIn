@@ -71,7 +71,7 @@ class PenaltyResult {
 
   String formatMessage() {
     if (!hasPenalties) {
-      return 'No penalties! All tasks completed! 🎉';
+      return 'No penalties! All tasks completed!';
     }
 
     final buffer = StringBuffer();
