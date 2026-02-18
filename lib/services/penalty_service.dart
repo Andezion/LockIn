@@ -1,4 +1,5 @@
 import 'package:lockin/models/day_entry.dart';
+import 'package:lockin/models/recurrence.dart';
 import 'package:lockin/services/hive_service.dart';
 
 class PenaltyService {
@@ -114,5 +115,43 @@ class PenaltyService {
     }
 
     await HiveService.saveDayEntry(dayEntry);
+  }
+
+  static Future<int> rescheduleOverdueOnceTasks() async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    final allTasks = HiveService.getAllActiveTasks();
+    final allActionLogs = HiveService.getAllActionLogs();
+    int count = 0;
+
+    for (final task in allTasks) {
+      if (task.recurrence.type != RecurrenceType.once) continue;
+
+      final taskDate = DateTime(
+        task.createdAt.year,
+        task.createdAt.month,
+        task.createdAt.day,
+      );
+
+      if (!taskDate.isBefore(today)) continue;
+
+      final completionsOnTaskDate = allActionLogs.where((log) {
+        final logDate = DateTime(
+          log.completedAt.year,
+          log.completedAt.month,
+          log.completedAt.day,
+        );
+        return log.taskId == task.id && logDate.isAtSameMomentAs(taskDate);
+      }).fold(0, (sum, log) => sum + log.completionCount);
+
+      if (completionsOnTaskDate < task.dailyGoal) {
+        task.createdAt = today;
+        await HiveService.saveTask(task);
+        count++;
+      }
+    }
+
+    return count;
   }
 }
