@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lockin/providers/profile_provider.dart';
+import 'package:lockin/providers/tasks_provider.dart';
 import 'package:lockin/services/penalty_service.dart';
 
 final penaltyProvider = Provider<PenaltyNotifier>((ref) {
@@ -13,6 +14,11 @@ class PenaltyNotifier {
 
   Future<PenaltyResult> checkAndApplyPenalties() async {
     final penalties = await PenaltyService.processAllPendingPenalties();
+
+    final rescheduledCount = await PenaltyService.rescheduleOverdueOnceTasks();
+    if (rescheduledCount > 0) {
+      ref.read(tasksProvider.notifier).reload();
+    }
 
     if (penalties.isEmpty) {
       return PenaltyResult(totalPenalty: 0, penaltiesByDate: {});
