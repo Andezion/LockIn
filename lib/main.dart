@@ -89,7 +89,7 @@ class _MainNavigatorState extends ConsumerState<MainNavigator> {
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.orange[700]),
             const SizedBox(width: 8),
-            const Text('Penalties for Incomplete Tasks'),
+            const Flexible(child: Text('Penalties for Incomplete Tasks')),
           ],
         ),
         content: Column(
