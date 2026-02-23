@@ -144,13 +144,14 @@ class _TaskItemState extends ConsumerState<TaskItem> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (isOverdue)
+                if (isOverdue) ...[
                   Icon(
                     Icons.warning_rounded,
                     color: Colors.red[700],
                     size: 20,
                   ),
-                const SizedBox(width: 8),
+                  const SizedBox(width: 4),
+                ],
                 IconButton(
                   icon: Icon(
                     _isExpanded ? Icons.expand_less : Icons.expand_more,

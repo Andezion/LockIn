@@ -67,6 +67,7 @@ class DailyPenaltyIndicator extends ConsumerWidget {
           const SizedBox(width: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            constraints: const BoxConstraints(maxWidth: 110),
             decoration: BoxDecoration(
               color: Colors.red,
               borderRadius: BorderRadius.circular(20),
@@ -78,6 +79,9 @@ class DailyPenaltyIndicator extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ),
         ],
