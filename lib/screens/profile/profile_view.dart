@@ -134,7 +134,7 @@ class ProfileView extends ConsumerWidget {
                   color: result.hasPenalties ? Colors.orange : Colors.green,
                 ),
                 const SizedBox(width: 8),
-                const Text('Check Completed'),
+                const Flexible(child: Text('Check Completed')),
               ],
             ),
             content: Column(
