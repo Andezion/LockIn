@@ -30,3 +30,6 @@ app.*.map.json
 pubspec.lock
 .metadata
 linux/
+macos/
+windows/
+web/
