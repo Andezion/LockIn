@@ -34,3 +34,5 @@ macos/
 windows/
 web/
 analysis_options.yaml
+ios/
+android/
