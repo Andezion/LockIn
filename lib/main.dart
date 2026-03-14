@@ -86,10 +86,19 @@ class _MainNavigatorState extends ConsumerState<MainNavigator> {
       context: context,
       builder: (context) => AlertDialog(
         title: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.orange[700]),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Icon(Icons.warning_amber_rounded, color: Colors.orange[700]),
+            ),
             const SizedBox(width: 8),
-            const Flexible(child: Text('Penalties for Incomplete Tasks')),
+            const Expanded(
+              child: Text(
+                'Penalties for\nIncomplete Tasks',
+                softWrap: true,
+              ),
+            ),
           ],
         ),
         content: Column(
