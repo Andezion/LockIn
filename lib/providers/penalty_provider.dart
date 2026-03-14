@@ -13,27 +13,38 @@ class PenaltyNotifier {
   PenaltyNotifier(this.ref);
 
   Future<PenaltyResult> checkAndApplyPenalties() async {
-    final penalties = await PenaltyService.processAllPendingPenalties();
+    final penaltiesByDate = await PenaltyService.processAllPendingPenalties();
 
     final rescheduledCount = await PenaltyService.rescheduleOverdueOnceTasks();
     if (rescheduledCount > 0) {
       ref.read(tasksProvider.notifier).reload();
     }
 
-    if (penalties.isEmpty) {
+    if (penaltiesByDate.isEmpty) {
       return PenaltyResult(totalPenalty: 0, penaltiesByDate: {});
     }
 
-    int totalPenalty =
-        penalties.values.fold(0, (sum, penalty) => sum + penalty);
+    int totalPenalty = penaltiesByDate.values
+        .fold(0, (sum, day) => sum + day.totalPenalty);
 
     if (totalPenalty > 0) {
       await ref.read(profileProvider.notifier).removeXp(totalPenalty);
+
+      // Reduce category levels for penalized tasks
+      for (final day in penaltiesByDate.values) {
+        for (final entry in day.categoryReductions.entries) {
+          await ref
+              .read(profileProvider.notifier)
+              .updateCategoryLevel(entry.key, -entry.value);
+        }
+      }
     }
 
     return PenaltyResult(
       totalPenalty: totalPenalty,
-      penaltiesByDate: penalties,
+      penaltiesByDate: {
+        for (final e in penaltiesByDate.entries) e.key: e.value.totalPenalty,
+      },
     );
   }
 
@@ -49,14 +60,19 @@ class PenaltyNotifier {
       return 0;
     }
 
-    final penalty =
+    final result =
         await PenaltyService.processPenaltiesForDate(normalizedYesterday);
 
-    if (penalty > 0) {
-      await ref.read(profileProvider.notifier).removeXp(penalty);
+    if (result.totalPenalty > 0) {
+      await ref.read(profileProvider.notifier).removeXp(result.totalPenalty);
+      for (final entry in result.categoryReductions.entries) {
+        await ref
+            .read(profileProvider.notifier)
+            .updateCategoryLevel(entry.key, -entry.value);
+      }
     }
 
-    return penalty;
+    return result.totalPenalty;
   }
 
   int getTotalPenaltyForPeriod(DateTime start, DateTime end) {
