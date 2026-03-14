@@ -1,9 +1,21 @@
 import 'package:lockin/models/day_entry.dart';
+import 'package:lockin/models/life_category.dart';
 import 'package:lockin/models/recurrence.dart';
 import 'package:lockin/services/hive_service.dart';
+import 'package:lockin/services/xp_calculator.dart';
+
+class ProcessedDayPenalty {
+  final int totalPenalty;
+  final Map<LifeCategory, double> categoryReductions;
+
+  ProcessedDayPenalty({
+    required this.totalPenalty,
+    required this.categoryReductions,
+  });
+}
 
 class PenaltyService {
-  static Future<int> processPenaltiesForDate(DateTime date) async {
+  static Future<ProcessedDayPenalty> processPenaltiesForDate(DateTime date) async {
     final normalizedDate = DateTime(date.year, date.month, date.day);
 
     final allTasks = HiveService.getAllActiveTasks();
@@ -13,7 +25,7 @@ class PenaltyService {
         .toList();
 
     if (tasksForDate.isEmpty) {
-      return 0;
+      return ProcessedDayPenalty(totalPenalty: 0, categoryReductions: {});
     }
 
     final actionLogs = HiveService.getAllActionLogs();
@@ -33,7 +45,7 @@ class PenaltyService {
     }
 
     int totalPenalty = 0;
-    final List<String> penalizedTasks = [];
+    final Map<LifeCategory, double> categoryReductions = {};
 
     for (final task in tasksForDate) {
       final completedCount = completionCounts[task.id] ?? 0;
@@ -46,7 +58,12 @@ class PenaltyService {
         final taskPenalty = penaltyPerMiss * missedCount;
 
         totalPenalty += taskPenalty;
-        penalizedTasks.add('${task.title}: -$taskPenalty XP');
+
+        final catReduction =
+            XPCalculator.calculateCategoryProgress(difficulty: task.difficulty) *
+                missedCount;
+        categoryReductions[task.category] =
+            (categoryReductions[task.category] ?? 0) + catReduction;
       }
     }
 
@@ -54,11 +71,14 @@ class PenaltyService {
       await _savePenalty(normalizedDate, totalPenalty);
     }
 
-    return totalPenalty;
+    return ProcessedDayPenalty(
+      totalPenalty: totalPenalty,
+      categoryReductions: categoryReductions,
+    );
   }
 
-  static Future<Map<DateTime, int>> processAllPendingPenalties() async {
-    final Map<DateTime, int> penalties = {};
+  static Future<Map<DateTime, ProcessedDayPenalty>> processAllPendingPenalties() async {
+    final Map<DateTime, ProcessedDayPenalty> penalties = {};
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
@@ -72,9 +92,9 @@ class PenaltyService {
     );
 
     while (checkDate.isBefore(today)) {
-      final penalty = await processPenaltiesForDate(checkDate);
-      if (penalty > 0) {
-        penalties[checkDate] = penalty;
+      final result = await processPenaltiesForDate(checkDate);
+      if (result.totalPenalty > 0) {
+        penalties[checkDate] = result;
       }
       checkDate = checkDate.add(const Duration(days: 1));
     }
