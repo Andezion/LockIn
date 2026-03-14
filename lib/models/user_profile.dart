@@ -48,6 +48,7 @@ class UserProfile extends HiveObject {
   }
 
   int calculateLevel() {
+    if (totalXp <= 0) return 1;
     if (totalXp < 100) return 1;
     return (sqrt(totalXp / 100)).floor() + 1;
   }
@@ -62,6 +63,7 @@ class UserProfile extends HiveObject {
   }
 
   double get levelProgress {
+    if (totalXp <= 0) return 0.0;
     final currentLevelStart = currentLevelXp;
     final nextLevelStart = nextLevelXp;
     final range = nextLevelStart - currentLevelStart;
@@ -75,7 +77,7 @@ class UserProfile extends HiveObject {
   }
 
   void removeXp(int xp) {
-    totalXp = (totalXp - xp).clamp(0, totalXp);
+    totalXp = totalXp - xp;
     level = calculateLevel();
   }
 
