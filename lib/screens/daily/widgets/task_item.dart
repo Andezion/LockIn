@@ -4,6 +4,7 @@ import 'package:lockin/models/task.dart';
 import 'package:lockin/providers/action_logs_provider.dart';
 import 'package:lockin/providers/tasks_provider.dart';
 import 'package:lockin/screens/daily/widgets/complete_task_dialog.dart';
+import 'package:lockin/screens/daily/edit_task_screen.dart';
 
 class TaskItem extends ConsumerStatefulWidget {
   final Task task;
@@ -161,6 +162,21 @@ class _TaskItemState extends ConsumerState<TaskItem> {
                     setState(() {
                       _isExpanded = !_isExpanded;
                     });
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.edit_outlined, size: 20),
+                  color: Colors.blueGrey,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditTaskScreen(task: widget.task),
+                      ),
+                    );
                   },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
