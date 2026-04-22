@@ -1,4 +1,4 @@
-name: lockin
+name: LockIn
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -112,16 +112,18 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icon.png"
+  image_path: "assets/photo1.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/photo1.png"
 
 flutter_native_splash:
-  image: "assets/long.png"
+  image: "assets/photo2.png"
   color: "#ffffff"
   fullscreen: true
-  android_gravity: fill
-  ios_content_mode: scaleAspectFill
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
   android_12:
-    image: "assets/long.png"
+    image: "assets/photo2.png"
     color: "#ffffff"
-    image_dark: "assets/long.png"
+    image_dark: "assets/photo2.png"
     color_dark: "#ffffff"
