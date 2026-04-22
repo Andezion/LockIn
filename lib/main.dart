@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    FlutterNativeSplash.remove(); // сразу показываем Flutter splash (photo2)
+    FlutterNativeSplash.remove();
     _init();
   }
 
@@ -126,7 +126,8 @@ class _MainNavigatorState extends ConsumerState<MainNavigator> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 2),
-              child: Icon(Icons.warning_amber_rounded, color: Colors.orange[700]),
+              child:
+                  Icon(Icons.warning_amber_rounded, color: Colors.orange[700]),
             ),
             const SizedBox(width: 8),
             const Expanded(
