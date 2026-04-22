@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lockin/screens/daily/daily_view.dart';
 import 'package:lockin/screens/profile/profile_view.dart';
 import 'package:lockin/screens/statistics/statistics_view.dart';
-import 'package:lockin/services/hive_service.dart';
 import 'package:lockin/providers/penalty_provider.dart';
+import 'package:lockin/services/hive_service.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await HiveService.initialize(clearData: false);
-
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const ProviderScope(child: LockInApp()));
 }
 
@@ -35,7 +34,44 @@ class LockInApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainNavigator(),
+      home: const SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    FlutterNativeSplash.remove(); // сразу показываем Flutter splash (photo2)
+    _init();
+  }
+
+  Future<void> _init() async {
+    await Future.wait([
+      HiveService.initialize(clearData: false),
+      Future.delayed(const Duration(seconds: 2)),
+    ]);
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const MainNavigator()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SizedBox.expand(
+        child: Image.asset('assets/photo2.png', fit: BoxFit.cover),
+      ),
     );
   }
 }
