@@ -8,7 +8,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:LockIn/main.dart';
+import 'package:lockin/main.dart';
 
 void main() {
   testWidgets('App launches successfully', (WidgetTester tester) async {
